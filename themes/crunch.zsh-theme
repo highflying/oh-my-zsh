@@ -13,11 +13,11 @@
 # Colors are at the top so you can mess with those separately if you like.
 # For the most part I stuck with Dallas's.
 
-CRUNCH_BRACKET_COLOR="%{$fg[white]%}"
-CRUNCH_TIME_COLOR="%{$fg[yellow]%}"
+CRUNCH_BRACKET_COLOR="%{$fg[black]%}"
+CRUNCH_TIME_COLOR="%{$fg[grey]%}"
 CRUNCH_RVM_COLOR="%{$fg[magenta]%}"
-CRUNCH_DIR_COLOR="%{$fg[cyan]%}"
-CRUNCH_GIT_BRANCH_COLOR="%{$fg[green]%}"
+CRUNCH_DIR_COLOR="%{$fg[black]%}"
+CRUNCH_GIT_BRANCH_COLOR="%{$fg[yellow]%}"
 CRUNCH_GIT_CLEAN_COLOR="%{$fg[green]%}"
 CRUNCH_GIT_DIRTY_COLOR="%{$fg[red]%}"
 
@@ -36,8 +36,21 @@ else
     CRUNCH_RVM_="$CRUNCH_BRACKET_COLOR"["$CRUNCH_RVM_COLOR\${\$(rbenv version | sed -e 's/ (set.*$//' -e 's/^ruby-//')}$CRUNCH_BRACKET_COLOR"]"%{$reset_color%}"
   fi
 fi
-CRUNCH_DIR_="$CRUNCH_DIR_COLOR%~\$(git_prompt_info) "
+
+HOSTNAME=`hostname`
+if [ "$HOSTNAME" = "brogers.vm.jobsite.co.uk" ]; then
+    HOSTNAME="vm"
+elif [ "$HOSTNAME" = "localhost" ]; then
+    HOSTNAME="chromebook"
+else
+    HOSTNAME="desktop"
+fi
+CRUNCH_DIR_="$CRUNCH_DIR_COLOR%~@$HOSTNAME\$(git_prompt_info) "
 CRUNCH_PROMPT="$CRUNCH_BRACKET_COLOR➭ "
 
+precmd() {
+    jobs
+}
 # Put it all together!
-PROMPT="$CRUNCH_TIME_$CRUNCH_RVM_$CRUNCH_DIR_$CRUNCH_PROMPT%{$reset_color%}"
+#PROMPT="$CRUNCH_TIME_$CRUNCH_RVM_$CRUNCH_DIR_$CRUNCH_PROMPT%{$reset_color%}"
+PROMPT="$CRUNCH_RVM_$CRUNCH_DIR_$CRUNCH_PROMPT%{$reset_color%}"
